@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
@@ -14,6 +14,11 @@ def create_database():
         id = Column(Integer, primary_key=True)
         inn = Column(String)
         name = Column(String)
+        num_payments = Column(Integer, default=0)
+        total_payment = Column(Numeric(precision=10, scale=2), default=0)
+        min_payment = Column(Float, default=0)
+        max_payment = Column(Float, default=0)
+        median_payment = Column(Float, default=0)
         payments = relationship('Payment', back_populates='contractor')
 
     class Payment(Base):
