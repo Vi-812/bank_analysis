@@ -1,20 +1,24 @@
-import argparse
 import pandas as pd
 import sys
 from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
-from models import create_database
 import time
 import statistics
 from prettytable import PrettyTable
+from models import create_database
+from find_files import find_excel_files
 
-parser = argparse.ArgumentParser(description="Файл для анализа")
-parser.add_argument("file", nargs="?", default="test-", help="Имя файла")
-args = parser.parse_args()
-file_name = args.file
 
-if not file_name.endswith(".xlsx"):
-    file_name += ".xlsx"
+excel_files_list = find_excel_files()
+
+for excel_file in excel_files_list:
+
+
+
+
+
+
+
 
 try:
     df = pd.read_excel(file_name)
