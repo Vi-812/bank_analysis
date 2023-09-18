@@ -4,18 +4,17 @@ from sqlalchemy.orm import sessionmaker, relationship
 
 
 def create_database():
-    # Создание подключения к базе данных
+
     engine = create_engine('sqlite:///contractors.db')
     Base = declarative_base()
 
-    # Определение моделей с помощью SQLAlchemy ORM
     class Contractor(Base):
         __tablename__ = 'contractors'
         id = Column(Integer, primary_key=True)
         inn = Column(String)
         name = Column(String)
         num_payments = Column(Integer, default=0)
-        total_payment = Column(Numeric(precision=10, scale=2), default=0)
+        total_payment = Column(Numeric(precision=20, scale=2), default=0)
         min_payment = Column(Float, default=0)
         max_payment = Column(Float, default=0)
         median_payment = Column(Float, default=0)
@@ -28,13 +27,11 @@ def create_database():
         payment = Column(Float)
         contractor = relationship('Contractor', back_populates='payments')
 
-    # Создание таблиц в базе данных
     Base.metadata.create_all(engine)
 
     # Очистка данных из таблиц
     Session = sessionmaker(bind=engine)
     session = Session()
-
     session.query(Contractor).delete()
     session.query(Payment).delete()
     session.commit()

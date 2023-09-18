@@ -20,7 +20,7 @@ def find_excel_files():
         for file in excel_files_list:
             print(file)
             base_name = os.path.splitext(file)[0]
-            folder_name = os.path.join(".", base_name)
+            folder_name = os.path.join("..", base_name)
             os.makedirs(folder_name, exist_ok=True)
 
         print(f"Общее количество файлов - {len(excel_files_list)}")
