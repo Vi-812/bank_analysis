@@ -17,7 +17,7 @@ def handler(excel_file):
         return
 
     num_rows = df.shape[0]
-    print(f"Обработка файла '{excel_file}', {num_rows} строк")
+    print(f"'{excel_file}' в обработке, количество строк - {num_rows}")
 
     Contractor, Payment, engine = create_database()
     Session = sessionmaker(bind=engine)
@@ -77,6 +77,7 @@ def handler(excel_file):
     contractors_df = pd.DataFrame()
 
     for contractor in all_contractors:
+
         update_contractor_stats(session=session, contractor=contractor, Payment=Payment)
 
         contractor_data = {
@@ -98,8 +99,23 @@ def handler(excel_file):
         contractors_df["Сумма (Дебит)"] = contractors_df["Сумма (Дебит)"].astype(float)
         contractors_df["Сумма (Кредит)"] = contractors_df["Сумма (Кредит)"].astype(float)
 
-        base_name = os.path.splitext(os.path.basename(excel_file))[0]
-        folder_name = os.path.join(os.path.dirname(excel_file), base_name)
-        output_excel_file = os.path.join(folder_name, f"Отчет {base_name}.xlsx")
+    base_name = os.path.splitext(os.path.basename(excel_file))[0]
+    folder_name = os.path.join(os.path.dirname(excel_file), base_name)
+    output_excel_file = os.path.join(folder_name, f"Отчет {base_name}.xlsx")
 
-        contractors_df.to_excel(output_excel_file, index=False, engine='xlsxwriter', float_format="%.2f")
+    excel_writer = pd.ExcelWriter(output_excel_file, engine='xlsxwriter')
+
+    contractors_df.to_excel(excel_writer, index=False)
+
+    workbook = excel_writer.book
+    worksheet = excel_writer.sheets['Sheet1']
+
+    column_widths = [12, 50, 16, 13, 13, 13, 16, 16, 13, 13, 13, 16]
+
+    for i, width in enumerate(column_widths):
+        worksheet.set_column(i, i, width)
+
+    excel_writer.close()
+
+    print(f"'{excel_file}' обработка завершена")
+    print("--------------------------------------------------")
